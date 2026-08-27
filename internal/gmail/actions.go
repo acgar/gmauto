@@ -61,6 +61,7 @@ func GetMessagesWithLabel(srv *gmail.Service, labelId string) []*gmail.Message {
 	return r.Messages
 }
 
+// Todo: mejor older_than:30d ?
 func GetMessagesWithLabelsAndQuery(srv *gmail.Service, labelIds []string, query string) []*gmail.Message {
 	r, err := srv.Users.Messages.List("me").LabelIds(labelIds...).Q(query).Do()
 	if err != nil {

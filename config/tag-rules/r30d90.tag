@@ -10,5 +10,11 @@
 # be automatically "mark as read" 30 days after its reception and
 # and  automatically deleted 90 days after its reception
 
-from:no-reply@accounts.google.com
-from:noreply@communication.basic-fit.com subject:*cambios*
+from:info@madnesslive.es
+from:messages-noreply@linkedin.com
+from:no-reply@twitch.tv subject:*directo*
+
+# Wegow:
+from:info@wegow.com subject:*toca*
+from:info@wegow.com subject:*concierto*
+from:info@wegow.com subject:*gira*
