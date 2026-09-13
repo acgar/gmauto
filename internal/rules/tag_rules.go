@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -32,11 +33,11 @@ func loadRulesDir(dir string) []*TagRules {
 
 	var tagRulesArray []*TagRules
 	for _, path := range paths {
-		tagRule, err := loadTagRulesFile(path)
+		tagRules, err := loadTagRulesFile(path)
 		if err != nil {
 			panic(err)
 		}
-		tagRulesArray = append(tagRulesArray, tagRule)
+		tagRulesArray = append(tagRulesArray, tagRules)
 	}
 	return tagRulesArray
 }
@@ -67,11 +68,12 @@ func loadTagRulesFile(path string) (*TagRules, error) {
 		}
 
 		rule := Rule{}
-		for _, word := range strings.Fields(line) {
-			if strings.HasPrefix(word, "from:") {
-				rule.fromConditions = append(rule.fromConditions, strings.TrimPrefix(word, "from:"))
-			} else if strings.HasPrefix(word, "subject:") {
-				rule.subjectConditions = append(rule.subjectConditions, strings.TrimPrefix(word, "subject:"))
+		fields := getFieldsFromLine(line)
+		for _, field := range fields {
+			if strings.HasPrefix(field, "from:") {
+				rule.fromConditions = append(rule.fromConditions, strings.TrimPrefix(field, "from:"))
+			} else if strings.HasPrefix(field, "subject:") {
+				rule.subjectConditions = append(rule.subjectConditions, strings.TrimPrefix(field, "subject:"))
 			}
 		}
 		if len(rule.fromConditions) > 0 || len(rule.subjectConditions) > 0 {
@@ -84,6 +86,25 @@ func loadTagRulesFile(path string) (*TagRules, error) {
 	}
 
 	return tagRules, nil
+}
+
+func getFieldsFromLine(input string) []string {
+	re := regexp.MustCompile(`\b(from:|subject:)`)
+	matches := re.FindAllStringIndex(input, -1)
+
+	results := make([]string, 0)
+	for i := range matches {
+		if i+1 < len(matches) {
+			ini := matches[i][0]
+			end := matches[i+1][0]
+			results = append(results, strings.TrimSpace(input[ini:end]))
+		} else {
+			ini := matches[i][0]
+			results = append(results, strings.TrimSpace(input[ini:]))
+		}
+	}
+
+	return results
 }
 
 // CheckTagRules /*
