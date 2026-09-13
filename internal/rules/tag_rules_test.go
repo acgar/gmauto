@@ -1,6 +1,10 @@
 package rules
 
-import "testing"
+import (
+	"slices"
+	"strings"
+	"testing"
+)
 
 func TestCheckTextPattern(t *testing.T) {
 	cases := []struct {
@@ -160,6 +164,45 @@ func TestCheckTextPattern(t *testing.T) {
 					tt.pattern,
 					got,
 					tt.expected,
+				)
+			}
+		})
+	}
+}
+
+func TestGetFieldsFromFile(t *testing.T) {
+	cases := []struct {
+		name     string
+		input    string
+		expected []string
+	}{
+		{
+			name:     "One field",
+			input:    "from:some@mail.com",
+			expected: []string{"from:some@mail.com"},
+		},
+		{
+			name:     "Two fields",
+			input:    "from:some@mail.com subject:example subject with spaces",
+			expected: []string{"from:some@mail.com", "subject:example subject with spaces"},
+		},
+		{
+			name:     "More and more fields with extra spaces",
+			input:    "from:some@mail.com   subject:example: mail*    subject:other",
+			expected: []string{"from:some@mail.com", "subject:example: mail*", "subject:other"},
+		},
+	}
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			got := getFieldsFromLine(tt.input)
+
+			if !slices.Equal(got, tt.expected) {
+				t.Errorf(
+					"getFieldsFromLine(%q) = %v, want %v",
+					tt.input,
+					strings.Join(got, ";"),
+					strings.Join(tt.expected, ";"),
 				)
 			}
 		})
