@@ -191,6 +191,11 @@ func TestGetFieldsFromFile(t *testing.T) {
 			input:    "from:some@mail.com   subject:example: mail*    subject:other",
 			expected: []string{"from:some@mail.com", "subject:example: mail*", "subject:other"},
 		},
+		{
+			name:     "Start with spaces and garbage",
+			input:    "blabla  from:some@mail.com   subject:example: mail*    subject:other",
+			expected: []string{"from:some@mail.com", "subject:example: mail*", "subject:other"},
+		},
 	}
 
 	for _, tt := range cases {
