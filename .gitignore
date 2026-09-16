@@ -1,5 +1,4 @@
 .idea/*
-token.json
-credentials.json
-credentials/*
-       
+app-credentials.json
+settings/*
+build/*
