@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"gmauto/internal/gmail"
 	"gmauto/internal/policies"
-	"gmauto/internal/utils"
+	"strconv"
 
 	"github.com/urfave/cli/v3"
 	sdkGmail "google.golang.org/api/gmail/v1"
@@ -24,7 +24,8 @@ func ExecTrashPolicyCommand(ctx context.Context, cmd *cli.Command) error {
 }
 
 func executeTrashPolicy(srv *sdkGmail.Service, labelId string, days int) {
-	messages := gmail.GetMessagesWithLabelsAndQuery(srv, []string{labelId}, "before:"+utils.DaysAgo(days))
+	query := "older_than:" + strconv.Itoa(days) + "d"
+	messages := gmail.GetMessagesWithLabelsAndQuery(srv, []string{labelId}, query)
 
 	messagesIds := make([]string, 0, len(messages))
 	for _, message := range messages {
