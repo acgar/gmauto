@@ -29,7 +29,7 @@ func LoadTrashPolicies() []*Policy {
 }
 
 func loadPoliciesDir(dir string) []*Policy {
-	paths, err := filepath.Glob(dir + "*.tag")
+	paths, err := filepath.Glob(path.Join(dir, "*.tag"))
 	if err != nil {
 		panic(err)
 	}
