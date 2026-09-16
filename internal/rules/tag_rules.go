@@ -3,13 +3,15 @@ package rules
 import (
 	"bufio"
 	"fmt"
+	"gmauto/internal/config"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
 )
 
-const tagRulesDir = "./config/tag-rules/"
+const tagsRulesDirName = "tags"
 
 type TagRules struct {
 	TagName string
@@ -22,11 +24,12 @@ type Rule struct {
 }
 
 func LoadRules() []*TagRules {
-	return loadRulesDir(tagRulesDir)
+	rulesDir := path.Join(config.GetSettingsPath(), tagsRulesDirName)
+	return loadRulesDir(rulesDir)
 }
 
 func loadRulesDir(dir string) []*TagRules {
-	paths, err := filepath.Glob(dir + "*.tag")
+	paths, err := filepath.Glob(filepath.Join(dir, "*.tag"))
 	if err != nil {
 		panic(err)
 	}

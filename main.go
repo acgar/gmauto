@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"gmauto/internal/commands"
+	"gmauto/internal/config"
 	"log"
 	"os"
 
@@ -10,7 +11,20 @@ import (
 )
 
 func main() {
+
 	cmd := &cli.Command{
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "settings-path",
+				Value:   "./settings",
+				Aliases: []string{"s"},
+				Usage:   "Path to settings directory",
+			},
+		},
+		Before: func(ctx context.Context, cmd *cli.Command) (context.Context, error) {
+			config.LoadConfigFromCliFlags(cmd)
+			return nil, nil
+		},
 		Commands: []*cli.Command{
 			{
 				Name:  "login",

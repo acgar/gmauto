@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	appConfig "gmauto/internal/config"
 	"log"
 	"net/http"
 	"os"
+	"path"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -14,8 +16,11 @@ import (
 	"google.golang.org/api/option"
 )
 
+const appCredentialsFile = "./app-credentials.json"
+const userCredentialsFileName = "credentials/token.json"
+
 func GetGmailService(ctx context.Context) *gmail.Service {
-	b, err := os.ReadFile("credentials.json")
+	b, err := os.ReadFile(appCredentialsFile)
 	if err != nil {
 		log.Fatalf("Unable to read client secret file: %v", err)
 	}
@@ -40,7 +45,8 @@ func getClient(config *oauth2.Config) *http.Client {
 	// The file token.json stores the user's access and refresh tokens, and is
 	// created automatically when the authorization flow completes for the first
 	// time.
-	tokFile := "token.json"
+	tokFile := path.Join(appConfig.GetSettingsPath(), userCredentialsFileName)
+
 	tok, err := tokenFromFile(tokFile)
 	if err != nil {
 		tok = getTokenFromWeb(config)

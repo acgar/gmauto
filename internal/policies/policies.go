@@ -3,15 +3,17 @@ package policies
 import (
 	"bufio"
 	"fmt"
+	"gmauto/internal/config"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-const readPoliciesDir = "./config/policies/read/"
-const trashPoliciesDir = "./config/policies/trash/"
+const readPoliciesDirName = "policies/read"
+const trashPoliciesDirName = "policies/trash"
 
 type Policy struct {
 	TagName          string
@@ -19,11 +21,11 @@ type Policy struct {
 }
 
 func LoadReadPolicies() []*Policy {
-	return loadPoliciesDir(readPoliciesDir)
+	return loadPoliciesDir(path.Join(config.GetSettingsPath(), readPoliciesDirName))
 }
 
 func LoadTrashPolicies() []*Policy {
-	return loadPoliciesDir(trashPoliciesDir)
+	return loadPoliciesDir(path.Join(config.GetSettingsPath(), trashPoliciesDirName))
 }
 
 func loadPoliciesDir(dir string) []*Policy {
