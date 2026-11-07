@@ -15,6 +15,12 @@ build-windows:
 run:
 	go run .
 
+run-all:
+	go run . x tag
+	go run . x read
+	go run . x trash
+
+
 test:
 	go test ./...
 

@@ -31,6 +31,7 @@ func TagCommand(ctx context.Context, cmd *cli.Command) error {
 		// Tag mails
 		for tag, mailsId := range mailsToTag {
 			labelId := labels[tag]
+			fmt.Printf("Apply tag '%s' (%s) to '%d' mails\n", tag, labelId, len(mailsId))
 			gmail.AddLabelsToMessages(srv, mailsId, []string{labelId})
 		}
 		// Mark mails as processed
